@@ -1,5 +1,7 @@
-import * as argv from "yargs/argv";
-// const argv = require("yargs").argv;
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import { nanoid } from "nanoid";
+
 import {
   listContacts,
   getContactById,
@@ -15,15 +17,18 @@ async function invokeAction({ action, id, name, email, phone }) {
       break;
 
     case "get":
-      // ... id
+      const contactById = await getContactById(id);
+      console.log(contactById);
       break;
 
     case "add":
-      // ... name email phone
+      const contact = await addContact({ id: nanoid(), name, email, phone });
+      console.log(contact);
       break;
 
     case "remove":
-      // ... id
+      const contactRemoved = await removeContact(id);
+      console.log(contactRemoved);
       break;
 
     default:
@@ -31,6 +36,7 @@ async function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
-invokeAction(argv);
-
-const argv = process.argv;
+const argvArr = hideBin(process.argv);
+console.log("🚀 ~ file: index.js:38 ~ argvArr", argvArr);
+const args = yargs(argvArr).argv;
+await invokeAction(args);

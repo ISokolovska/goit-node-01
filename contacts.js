@@ -6,46 +6,23 @@ export const listContacts = async () => {
   return JSON.parse(contactsJson);
 };
 
-// console.log(
-//   "🚀 ~ file: contacts.js:5 ~ listContacts ~ listContacts",
-//   await listContacts()
-// );
-
-export const addContact = async (contact) => {
+export const addContact = async ({ id, name, email, phone }) => {
   const contacts = await listContacts();
-  contacts.push(contact);
+  contacts.push({ id: nanoid(), name, email, phone });
   await fs.writeFile("./db/contacts.json", JSON.stringify(contacts));
-  return contact;
+  return { id: nanoid(), name, email, phone };
 };
-
-// console.log(
-//   "🚀 ~ file: contacts.js:15 ~ addContact ~ addContact",
-//   await addContact({
-//     id: nanoid(),
-//     name: "Iuliia Sokolovska",
-//     email: "uu.sokil@gmail.com",
-//     phone: "456-456",
-//   })
-// );
 
 export const getContactById = async (contactId) => {
   const contacts = await listContacts();
-  return contacts.find((contact) => contact.id === contactId);
+  return contacts.find((contact) => contact.id === contactId.toString());
 };
-
-// console.log(
-//   "🚀 ~ file: contacts.js:31 ~ getContactById ~ getContactById",
-//   await getContactById("2")
-// );
 
 export const removeContact = async (contactId) => {
   const contacts = await listContacts();
-  const contactRemoved = contacts.filter((contact) => contact.id !== contactId);
-  await fs.writeFile("./db/contacts.json", JSON.stringify(contactRemoved));
+  const removedContact = contacts.filter((contact) => {
+    return contact.id !== contactId.toString();
+  });
+  await fs.writeFile("./db/contacts.json", JSON.stringify(removedContact));
   return true;
 };
-
-// console.log(
-//   "🚀 ~ file: contacts.js:44 ~ removeContact ~ removeContact",
-//   await removeContact("8")
-// );
